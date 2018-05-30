@@ -1,0 +1,6 @@
+/vendor/*
+client_secret.json
+composer.json
+composer.lock
+composer.phar
+credentials.json
