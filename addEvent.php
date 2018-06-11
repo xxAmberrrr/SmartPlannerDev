@@ -1,6 +1,24 @@
 <?php
 
 require 'quickstart.php';
+require 'index.php';
+
+function randomDate($minDate, $maxDate, $minTime, $maxTime) {
+
+    $minEpoch = strtotime($minDate);
+    $maxEpoch = strtotime($maxDate);
+    $minTimeEpoch = strtotime($minTime);
+    $maxTimeEpoch = strtotime($maxTime);
+
+    $randomEpoch = rand($minEpoch, $maxEpoch);
+    $randomTimeEpoch = rand($minTimeEpoch, $maxTimeEpoch);
+
+    $date = date('Y-m-d', $randomEpoch);
+    $time = date('H:i:s', $randomTimeEpoch);
+
+    return $date . 'T' . $time;
+
+}
 
 $client = getClient();
 $service = new Google_Service_Calendar($client);
