@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form>
+<form action="getWorkTime.php" method="post">
     Start tijd: 
     <br>
     <input type="time" name="starting-time"/>
@@ -19,6 +19,8 @@
     <br>
     <input type="submit" value="Opslaan"/>
 </form>
+
+<input type=button onClick="parent.location='index.php'" value="Terug"/>
     
 </body>
 </html>
