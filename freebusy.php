@@ -8,6 +8,23 @@
 
 require 'quickstart.php';
 
+function randomDate($minDate, $maxDate, $minTime, $maxTime) {
+
+    $minEpoch = strtotime($minDate);
+    $maxEpoch = strtotime($maxDate);
+    $minTimeEpoch = strtotime($minTime);
+    $maxTimeEpoch = strtotime($maxTime);
+
+    $randomEpoch = rand($minEpoch, $maxEpoch);
+    $randomTimeEpoch = rand($minTimeEpoch, $maxTimeEpoch);
+
+    $date = date('Y-m-d', $randomEpoch);
+    $time = date('H:i:s', $randomTimeEpoch);
+
+    return $date . 'T' . $time;
+
+}
+
 // Create an authorized calendar service object
 $calendarService = new Google_Service_Calendar( $client );
 $calendarList = $calendarService->calendarList->listCalendarList();
@@ -29,8 +46,8 @@ while(true) {
 
 // Make our Freebusy request
 $freebusy = new Google_Service_Calendar_FreeBusyRequest();
-$freebusy->setTimeMin('2018-06-11T00:00:00-04:00');
-$freebusy->setTimeMax('2018-06-15T00:00:00-04:00');
+$freebusy->setTimeMin(date('Y-m-d\TH:i:s+00:00'));
+$freebusy->setTimeMax('2018-06-25T00:00:00+00:00');
 $freebusy->setTimeZone('Europe/Amsterdam');
 $freebusy->setItems( $calendarArray );
 $createdReq = $calendarService->freebusy->query($freebusy);
@@ -55,14 +72,53 @@ $calendars = [$primaryId, $schoolId, $smartPlannerId, $workId, $mt4Id];
 //    echo "</pre>";
 //}
 
+//for($i = 0; $i < $calendars; $i++) {
+//    foreach ($createdReq['calendars'][$calendars[$i]]['busy'] as $calendar) {
+//        echo "<pre>";
+//        print_r($calendar['start']);
+//        echo "</pre>";
+//
+//        echo "<pre>";
+//        print_r($calendar['end']);
+//        echo "</pre>";
+//    }
+//}
+
+$dateStart = randomDate(date('Y-m-d'), '2018-06-17', 'H:i:s', '17:00:00');
+$dateEnd = date('Y-m-d\TH:i:s', strtotime('+2 hours', strtotime($dateStart)));
+
+$startFormat = new DateTime($dateStart);
+$endFormat = new DateTime($dateEnd);
+
+$startISO = $startFormat->format(DateTime::ATOM);
+$endISO = $endFormat->format(DateTime::ATOM);
+
+//print_r($endFormat->format(DateTime::ATOM));
+
 for($i = 0; $i < $calendars; $i++) {
     foreach ($createdReq['calendars'][$calendars[$i]]['busy'] as $calendar) {
-        echo "<pre>";
-        print_r($calendar['start']);
-        echo "</pre>";
+        if($calendar['busy']) {
+            print 'Busy';
+        }
+        else {
+            print 'Free';
+        }
 
-        echo "<pre>";
-        print_r($calendar['end']);
-        echo "</pre>";
+//        echo "<pre>";
+//        print_r($calendar);
+//        echo "</pre>";
     }
 }
+
+//echo 'startiso:';
+//print_r($startISO);
+//echo '<br>';
+//echo 'endiso:';
+//print_r($endISO);
+//echo '<br>';
+//echo 'startcal:';
+//print_r($calendar['start']);
+//echo '<br>';
+//echo 'endcal:';
+//print_r($calendar['end']);
+
