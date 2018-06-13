@@ -123,10 +123,10 @@ for($i = 0; $i < count($calendarsSelected); $i++) {
   }
 }
 
-$pageToken = $calendarList->getNextPageToken();
-
-if ($pageToken) {
-    $optParams = array('pageToken' => $pageToken);
-    $calendarList = $service->calendarList->listCalendarList($optParams);
-}
+//$pageToken = $calendarsSelected->getNextPageToken();
+//
+//if ($pageToken) {
+//    $optParams = array('pageToken' => $pageToken);
+//    $calendarList = $service->calendarList->listCalendarList($optParams);
+//}
 ?>

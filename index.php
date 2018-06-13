@@ -7,16 +7,6 @@
 <body>
 
 <form action="addEvent.php" method="post">
-    Start tijd:
-    <br>
-    <input type="time" name="starting-time"/>
-    <br>
-    <br>
-    Eind tijd:
-    <br>
-    <input type="time" name="ending-time"/>
-    <br>
-    <br>
     To do:
     <br>
     <input type="text" name="task"/>
@@ -24,12 +14,12 @@
     <br>
     Werktijd per dag:
     <br>
-    <input type="number" name="working-time"/>
+    <input type="number" name="days"/>
     <br>
     <br>
     Deadline:
     <br>
-    <input type="datetime-local" name="deadline"/>
+    <input type="date" name="deadline"/>
     <br>
     <br>
     <input type="submit" value="Taak toevoegen"/>
