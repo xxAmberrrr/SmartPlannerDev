@@ -47,7 +47,7 @@ while(true) {
 // Make our Freebusy request
 $freebusy = new Google_Service_Calendar_FreeBusyRequest();
 $freebusy->setTimeMin(date('Y-m-d\TH:i:s+00:00'));
-$freebusy->setTimeMax('2018-06-25T00:00:00+00:00');
+$freebusy->setTimeMax('2018-06-25T00:00:00+02:00');
 $freebusy->setTimeZone('Europe/Amsterdam');
 $freebusy->setItems( $calendarArray );
 $createdReq = $calendarService->freebusy->query($freebusy);
@@ -84,31 +84,126 @@ $calendars = [$primaryId, $schoolId, $smartPlannerId, $workId, $mt4Id];
 //    }
 //}
 
-$dateStart = randomDate(date('Y-m-d'), '2018-06-17', 'H:i:s', '17:00:00');
+$dateStart = randomDate('2018-06-18', '2018-06-21', '09:00:00', '17:00:00');
 $dateEnd = date('Y-m-d\TH:i:s', strtotime('+2 hours', strtotime($dateStart)));
 
-$startFormat = new DateTime($dateStart);
-$endFormat = new DateTime($dateEnd);
+$startFormat = new DateTime($dateStart, new DateTimeZone('Europe/Amsterdam'));
+$endFormat = new DateTime($dateEnd, new DateTimeZone('Europe/Amsterdam'));
 
-$startISO = $startFormat->format(DateTime::ATOM);
-$endISO = $endFormat->format(DateTime::ATOM);
+$dateStartISO = $startFormat->format('c');
+$dateEndISO = $endFormat->format('c');
+
+//$startISO = date('c', strtotime($dateStart));
 
 //print_r($endFormat->format(DateTime::ATOM));
 
-for($i = 0; $i < $calendars; $i++) {
-    foreach ($createdReq['calendars'][$calendars[$i]]['busy'] as $calendar) {
-        if($calendar['busy']) {
-            print 'Busy';
-        }
-        else {
-            print 'Free';
-        }
+//        echo "<pre>";
+//        echo 'startiso: ';
+//        print_r($startISO);
+//        echo "</pre>";
 
 //        echo "<pre>";
-//        print_r($calendar);
+//        echo 'endiso: ';
+//        print_r($endISO);
 //        echo "</pre>";
+
+$busy = false;
+for($i = 0; $i < 2; $i++) {
+    for ($j = 0; $j < $calendars; $j++) {
+
+        echo "<pre>";
+        print_r($createdReq['calendars']);
+        echo "</pre>";
+
+//    foreach ($createdReq['calendars'][$calendars[$i]]['busy'] as $calendar) {
+////        if($endISO > $calendar['start'] && $startISO < $calendar['end']) {
+////            print 'Busy';
+////            $busy = true;
+////        }
+////        elseif($endISO > $calendar['end'] && $endISO < $calendar['end']) {
+////            print 'Busy';
+////            $busy = true;
+////        }
+////        elseif($startISO < $calendar['start'] && $endISO > $calendar['start']) {
+////            print 'Busy';
+////            $busy = true;
+////        }
+////        elseif($startISO < $calendar['end'] && $endISO > $calendar['end']) {
+////            print 'Busy';
+////            $busy = true;
+////        }
+////        else {
+////            print 'Free';
+////            $busy = false;
+////        }
+////
+//
+//        if ($dateStartISO > $calendar['start'] && $dateStartISO < $calendar['end']) {
+//            echo 'Busy';
+//            $busy = true;
+//        } elseif ($dateEndISO > $calendar['start'] && $dateEndISO < $calendar['end']) {
+//            echo 'Busy';
+//            $busy = true;
+//        } elseif ($calendar['start'] > $dateStartISO && $calendar['start'] < $dateEndISO) {
+//            echo 'Busy';
+//            $busy = true;
+//        } elseif ($calendar['end'] > $dateStartISO && $calendar['end'] < $dateEndISO) {
+//            echo 'Busy';
+//            $busy = true;
+//        } else {
+//            echo 'Free';
+//            $busy = false;
+//        }
+//
+//        echo $busy ? 'true' : 'false';
+//
+//        echo "<pre>";
+//        echo 'isostart:';
+//        print_r($dateStartISO);
+//        echo "</pre>";
+//
+//        echo "<pre>";
+//        echo 'isoend:';
+//        print_r($dateEndISO);
+//        echo "</pre>";
+//
+//        echo "<pre>";
+//        echo 'calendarstart:';
+//        print_r($calendar['start']);
+//        echo "</pre>";
+//
+//        echo "<pre>";
+//        echo 'calendarend: ';
+//        print_r($calendar['end']);
+//        echo "</pre>";
+
+//        foreach ($calendar['start'] as $start) {
+////            foreach ($calendar['end'] as $end) {
+////                if ($endISO > $start && $startISO < $end) {
+////                    $busy = true;
+////                }
+////                elseif($endISO > $end && $endISO < $end) {
+////                    $busy = true;
+////                }
+////                elseif($startISO < $start && $endISO > $start) {
+////                    $busy = true;
+////                }
+////                elseif($startISO < $end && $endISO > $end) {
+////                    $busy = true;
+////                }
+////            }
+//
+//            echo "<pre>";
+//            print_r($start);
+//            echo "</pre>";
+//
+//        }
+        //}
     }
 }
+
+//echo $busy ? 'true' : 'false';
+
 
 //echo 'startiso:';
 //print_r($startISO);

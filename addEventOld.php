@@ -8,7 +8,7 @@
 
 require 'quickstart.php';
 
-$client = getClient();
+//$client = getClient();
 $service = new Google_Service_Calendar($client);
 
 $calendarId = '6o49r0i8sivl2juaaf9h0rld0k@group.calendar.google.com'; //SmartPlanner
@@ -64,39 +64,59 @@ $mt4Id = 'tl0eblmcdpkitdtgc8fhiocpb0@group.calendar.google.com';
 
 $calendars = [$primaryId, $schoolId, $smartPlannerId, $workId, $mt4Id];
 
-for($i = 0; $i < 2; $i++) {
-    $dateStart = randomDate(date('Y-m-d'), '2018-06-17', '09:00:00', '17:00:00');
-    $dateEnd = date('Y-m-d\TH:i:s', strtotime('+2 hours', strtotime($dateStart)));
+//for($i = 0; $i < 2; $i++) {
+$dateStart = randomDate(date('Y-m-d'), '2018-06-21', '09:00:00', '17:00:00');
+$dateEnd = date('Y-m-d\TH:i:s', strtotime('+2 hours', strtotime($dateStart)));
 
-    $dateStartToTime = new DateTime($dateStart);
-    $dateStartISO = $dateStartToTime->format(DateTime::ATOM);
+$dateStartToTime = new DateTime($dateStart, new DateTimeZone('Europe/Amsterdam'));
+$dateStartISO = $dateStartToTime->format('c');
 
-    $dateEndToTime = new DateTime($dateEnd);
-    $dateEndISO = $dateEndToTime->format(DateTime::ATOM);
+$dateEndToTime = new DateTime($dateEnd, new DateTimeZone('Europe/Amsterdam'));
+$dateEndISO = $dateEndToTime->format('c');
 
-    $busy = false;
+$busy = false;
 
-    for($i = 0; $i < $calendars; $i++) {
-        foreach ($createdReq['calendars'][$calendars[$i]]['busy'] as $calendar) {
-            if($calendar['busy']) {
-                $busy = true;
-            }
-            else {
-               $event = new Google_Service_Calendar_Event(array(
-                   'summary' => 'test',
-                   'start' => array(
-                       'dateTime' => $dateStart,
-                       'timeZone' => 'Europe/Amsterdam',
-                   ),
-                   'end' => array(
-                       'dateTime' => $dateEnd,
-                       'timeZone' => 'Europe/Amsterdam',
-                   ),
-               ));
+for($j = 0; $j < $calendars; $j++) {
+    echo "<pre>";
+    print_r($createdReq['calendars']);
+    echo "</pre>";
 
-               $event = $service->events->insert($calendarId, $event);
-               printf('Events have been created');
-            }
+
+    foreach ($createdReq['calendars'][$calendars[$j]]['busy'] as $calendar) {
+        printf('B');
+        if ($dateStartISO > $calendar['start'] && $dateStartISO < $calendar['end']) {
+            $busy = true;
+        } elseif ($dateEndISO > $calendar['start'] && $dateEndISO < $calendar['end']) {
+            $busy = true;
+        } elseif ($calendar['start'] > $dateStartISO && $calendar['start'] < $dateEndISO) {
+            $busy = true;
+        } elseif ($calendar['end'] > $dateStartISO && $calendar['end'] < $dateEndISO) {
+            $busy = true;
+        } else {
+            $busy = false;
+        }
+
+        $event = new Google_Service_Calendar_Event(array(
+            'summary' => 'test',
+            'start' => array(
+                'dateTime' => $dateStart,
+                'timeZone' => 'Europe/Amsterdam',
+            ),
+            'end' => array(
+                'dateTime' => $dateEnd,
+                'timeZone' => 'Europe/Amsterdam',
+            ),
+        ));
+
+        printf('Overlap: ' . $busy);
+
+        if (!$busy) {
+            $event = $service->events->insert($calendarId, $event);
+            printf('Events have been created');
+        } else {
+            printf('Events can not be created');
         }
     }
 }
+//}
+
