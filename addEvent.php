@@ -35,7 +35,7 @@ $schoolCal = new Google_Service_Calendar_FreeBusyRequestItem();
 $schoolCal->setId('ihl73aqpljlu9u67srth0657s8@group.calendar.google.com');
 
 $smartPlannerCal = new Google_Service_Calendar_FreeBusyRequestItem();
-$smartPlannerCal->setId('6o49r0i8sivl2juaaf9h0rld0k@group.calendar.google.com');
+$smartPlannerCal->setId('g4eho8b6pjgftcv3ll6uqs9328@group.calendar.google.com');
 
 $workCal = new Google_Service_Calendar_FreeBusyRequestItem();
 $workCal->setId('k6m04v2tp7ortm5ol5kg8clkuk@group.calendar.google.com');
@@ -49,12 +49,14 @@ $query = $service->freebusy->query($freebusy);
 
 $queryPrimary = $query->getCalendars()['xxamberrrr12@gmail.com']['modelData']['busy'];
 $querySchool = $query->getCalendars()['ihl73aqpljlu9u67srth0657s8@group.calendar.google.com']['modelData']['busy'];
-$querySmartPlanner = $query->getCalendars()['6o49r0i8sivl2juaaf9h0rld0k@group.calendar.google.com']['modelData']['busy'];
+$querySmartPlanner = $query->getCalendars()['g4eho8b6pjgftcv3ll6uqs9328@group.calendar.google.com']['modelData']['busy'];
 $queryWork = $query->getCalendars()['k6m04v2tp7ortm5ol5kg8clkuk@group.calendar.google.com']['modelData']['busy'];
 $queryMT4 = $query->getCalendars()['tl0eblmcdpkitdtgc8fhiocpb0@group.calendar.google.com']['modelData']['busy'];
 
-//$scheduleStart = [];
-//$scheduleEnd = [];
+$scheduleStart = [];
+$scheduleEnd = [];
+
+$calendarId = 'g4eho8b6pjgftcv3ll6uqs9328@group.calendar.google.com';
 
 for($i = 0; $i < count($queryPrimary); $i++) {
     array_push($scheduleStart, $queryPrimary[$i]["start"]);
@@ -85,22 +87,24 @@ for($i = 0; $i < 2; $i++) {
     $dateStart = randomDate(date('Y-m-d'), '2018-06-18', '09:00:00', '17:00:00');
     $dateEnd = date('Y-m-d\TH:i:s', strtotime('+2 hours', strtotime($dateStart)));
 
-    $dateStartToTime = new DateTime($dateStart);
-    $dateStartUnix = $dateStartToTime->getTimestamp();
+    $dateStartToTime = new DateTime($dateStart, new DateTimeZone('Europe/Amsterdam'));
+    $dateStartUnix = $dateStartToTime->format('c');
 
-    $dateEndToTime = new DateTime($dateEnd);
-    $dateEndUnix = $dateEndToTime->getTimestamp();
+    $dateEndToTime = new DateTime($dateEnd, new DateTimeZone('Europe/Amsterdam'));
+    $dateEndUnix = $dateEndToTime->format('c');
 
     $overlap = false;
+
+    echo $overlap ? 'true' : 'false';
 
     $amount = min(count($scheduleStart), count($scheduleEnd));
 
     for ($j = 0; $j < $amount; $j++) {
-        $scheduleStartToTime = new DateTime($scheduleStart[$j]);
-        $scheduleStartUnix = $scheduleStartToTime->getTimeStamp();
+        $scheduleStartToTime = new DateTime($scheduleStart[$j], new DateTimeZone('Europe/Amsterdam'));
+        $scheduleStartUnix = $scheduleStartToTime->format('c');
 
-        $scheduleEndToTime = new DateTime($scheduleEnd[$j]);
-        $scheduleEndUnix = $scheduleEndToTime->getTimestamp();
+        $scheduleEndToTime = new DateTime($scheduleEnd[$j], new DateTimeZone('Europe/Amsterdam'));
+        $scheduleEndUnix = $scheduleEndToTime->format('c');
 
         if ($dateStartUnix > $scheduleStartUnix && $dateStartUnix < $scheduleEndUnix) {
             $overlap = true;
@@ -124,24 +128,26 @@ for($i = 0; $i < 2; $i++) {
             var_dump($dateEndUnix);
             var_dump($scheduleEndUnix);
         }
-    }
 
-    $event = new Google_Service_Calendar_Event(array(
-        'summary' => 'test' . ($overlap ? "Overlaps" : "Doesn't overlap"),
-        'start' => array(
-            'dateTime' => $dateStart,
-            'timeZone' => 'Europe/Amsterdam',
-        ),
-        'end' => array(
-            'dateTime' => $dateEnd,
-            'timeZone' => 'Europe/Amsterdam',
-        ),
-    ));
+        echo $overlap ? 'true' : 'false';
 
-    if(!$overlap)
-    {
-        $event = $service->events->insert($calendarId, $event);
-        printf('Events have been created');
+        $event = new Google_Service_Calendar_Event(array(
+            'summary' => 'test' . ($overlap ? "Overlaps" : "Doesn't overlap"),
+            'start' => array(
+                'dateTime' => $dateStart,
+                'timeZone' => 'Europe/Amsterdam',
+            ),
+            'end' => array(
+                'dateTime' => $dateEnd,
+                'timeZone' => 'Europe/Amsterdam',
+            ),
+        ));
+
+        if(!$overlap)
+        {
+            $event = $service->events->insert($calendarId, $event);
+            printf('Events have been created');
+        }
     }
 }
 

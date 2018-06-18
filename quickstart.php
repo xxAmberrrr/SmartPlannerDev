@@ -81,7 +81,7 @@ $calendarsSelected = array();
 
 array_push($calendarsSelected, 'xxamberrrr12@gmail.com'); //Amber Hoogland primary
 array_push($calendarsSelected, 'ihl73aqpljlu9u67srth0657s8@group.calendar.google.com'); //School
-array_push($calendarsSelected, '6o49r0i8sivl2juaaf9h0rld0k@group.calendar.google.com'); //SmartPlanner
+array_push($calendarsSelected, 'ndhgvmsjs4ua291il4s7bpqc14@group.calendar.google.com'); //SmartPlanner
 array_push($calendarsSelected, 'k6m04v2tp7ortm5ol5kg8clkuk@group.calendar.google.com'); //Werk
 array_push($calendarsSelected, 'tl0eblmcdpkitdtgc8fhiocpb0@group.calendar.google.com'); //MT4
 

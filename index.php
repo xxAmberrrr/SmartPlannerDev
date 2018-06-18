@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form action="addEvent.php" method="post">
+<form action="eventTest.php" method="post">
     To do:
     <br>
     <input type="text" name="task"/>

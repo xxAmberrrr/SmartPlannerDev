@@ -54,78 +54,78 @@ $createdReq = $calendarService->freebusy->query($freebusy);
 
 $primaryId = 'xxamberrrr12@gmail.com';
 $schoolId = 'ihl73aqpljlu9u67srth0657s8@group.calendar.google.com';
-$smartPlannerId = '6o49r0i8sivl2juaaf9h0rld0k@group.calendar.google.com';
+$smartPlannerId = 'g4eho8b6pjgftcv3ll6uqs9328@group.calendar.google.com';
 $workId = 'k6m04v2tp7ortm5ol5kg8clkuk@group.calendar.google.com';
 $mt4Id = 'tl0eblmcdpkitdtgc8fhiocpb0@group.calendar.google.com';
 
 $calendars = [$primaryId, $schoolId, $smartPlannerId, $workId, $mt4Id];
 
-$calendarId = '6o49r0i8sivl2juaaf9h0rld0k@group.calendar.google.com'; //SmartPlanner
+$calendarId = 'g4eho8b6pjgftcv3ll6uqs9328@group.calendar.google.com'; //SmartPlanner
 
 $busy = false;
 
-for($i = 0; $i < 2; $i++) {
+//for($i = 0; $i < 2; $i++) {
 
-    $dateStart = randomDate('2018-06-18', '2018-06-21', '09:00:00', '17:00:00');
-    $dateEnd = date('Y-m-d\TH:i:s', strtotime('+2 hours', strtotime($dateStart)));
+$dateStart = randomDate('2018-06-18', '2018-06-21', '09:00:00', '17:00:00');
+$dateEnd = date('Y-m-d\TH:i:s', strtotime('+2 hours', strtotime($dateStart)));
 
-    $startFormat = new DateTime($dateStart, new DateTimeZone('Europe/Amsterdam'));
-    $endFormat = new DateTime($dateEnd, new DateTimeZone('Europe/Amsterdam'));
+$startFormat = new DateTime($dateStart, new DateTimeZone('Europe/Amsterdam'));
+$endFormat = new DateTime($dateEnd, new DateTimeZone('Europe/Amsterdam'));
 
-    $dateStartISO = $startFormat->format('c');
-    $dateEndISO = $endFormat->format('c');
+$dateStartISO = $startFormat->format('c');
+$dateEndISO = $endFormat->format('c');
 
-    for ($j = 0; $j < $calendars; $j++) {
+for ($j = 0; $j < $calendars; $j++) {
 
-        //        echo "<pre>";
-        //        print_r($createdReq['calendars']);
-        //        echo "</pre>";
+            echo "<pre>";
+            print_r($createdReq['calendars'][$calendars[$j]['busy']]);
+            echo "</pre>";
 
-        foreach ($createdReq['calendars'][$calendars[$j]]['busy'] as $calendar) {
-            if ($dateStartISO > $calendar['start'] && $dateStartISO < $calendar['end']) {
-                //echo 'Busy';
-                $busy = true;
-            } elseif ($dateEndISO > $calendar['start'] && $dateEndISO < $calendar['end']) {
-                //echo 'Busy';
-                $busy = true;
-            } elseif ($calendar['start'] > $dateStartISO && $calendar['start'] < $dateEndISO) {
-                //echo 'Busy';
-                $busy = true;
-            } elseif ($calendar['end'] > $dateStartISO && $calendar['end'] < $dateEndISO) {
-                //echo 'Busy';
-                $busy = true;
-            } else {
-                //echo 'Free';
-                $busy = false;
-            }
-
-            //echo $busy ? 'true' : 'false';
+    foreach ($createdReq['calendars'][$calendars[$j]]['busy'] as $calendar) {
+        if ($dateStartISO > $calendar['start'] && $dateStartISO < $calendar['end']) {
+           // echo $busy ? 'true' ? 'false';
+            //echo 'Busy';
+            $busy = true;
+        } elseif ($dateEndISO > $calendar['start'] && $dateEndISO < $calendar['end']) {
+            //echo 'Busy';
+            $busy = true;
+        } elseif ($calendar['start'] > $dateStartISO && $calendar['start'] < $dateEndISO) {
+            //echo 'Busy';
+            $busy = true;
+        } elseif ($calendar['end'] > $dateStartISO && $calendar['end'] < $dateEndISO) {
+            //echo 'Busy';
+            $busy = true;
+        } else {
+            //echo 'Free';
+            $busy = false;
         }
-
     }
 
-    echo $busy ? 'true' : 'false';
+}
 
-    if (!$busy) {
-        $event = new Google_Service_Calendar_Event(array(
-            'summary' => 'test',
-            'start' => array(
-                'dateTime' => $dateStart,
-                'timeZone' => 'Europe/Amsterdam',
-            ),
-            'end' => array(
-                'dateTime' => $dateEnd,
-                'timeZone' => 'Europe/Amsterdam',
-            ),
-        ));
+echo $busy ? 'true' : 'false';
 
-        // echo $busy ? 'true' : 'false';
+//}
 
-        $event = $calendarService->events->insert($calendarId, $event);
-        printf('Events have been created');
-    } else {
-        printf('Events can not be created');
-    }
+if (!$busy) {
+    $event = new Google_Service_Calendar_Event(array(
+        'summary' => 'test',
+        'start' => array(
+            'dateTime' => $dateStart,
+            'timeZone' => 'Europe/Amsterdam',
+        ),
+        'end' => array(
+            'dateTime' => $dateEnd,
+            'timeZone' => 'Europe/Amsterdam',
+        ),
+    ));
+
+    // echo $busy ? 'true' : 'false';
+
+    $event = $calendarService->events->insert($calendarId, $event);
+    printf('Events have been created');
+} else {
+    printf('Events can not be created');
 }
 
 //
@@ -148,4 +148,28 @@ for($i = 0; $i < 2; $i++) {
 //        echo 'calendarend: ';
 //        print_r($calendar['end']);
 //        echo "</pre>";
+
+
+////        if($endISO > $calendar['start'] && $startISO < $calendar['end']) {
+////            print 'Busy';
+////            $busy = true;
+////        }
+////        elseif($endISO > $calendar['end'] && $endISO < $calendar['end']) {
+////            print 'Busy';
+////            $busy = true;
+////        }
+////        elseif($startISO < $calendar['start'] && $endISO > $calendar['start']) {
+////            print 'Busy';
+////            $busy = true;
+////        }
+////        elseif($startISO < $calendar['end'] && $endISO > $calendar['end']) {
+////            print 'Busy';
+////            $busy = true;
+////        }
+////        else {
+////            print 'Free';
+////            $busy = false;
+////        }
+////
+//
 
